@@ -2,8 +2,6 @@ alphalist = "abcdefghijklmnopqrstuvwxyzåäöabcdefghijklmnopqrstuvwxyzåäö"
 alphadict = {}
 keyshift = {}
 
-print(alphalist[:1])
-
 for i in range(29):
     alphadict[i] = alphalist[i]
     keyshift[alphalist[i]] = i
@@ -15,7 +13,7 @@ plaintext="iloveuppsala"
 key = "jöhn"
 
 ptr = 0
-ciphertext = ""
+ciphertextls = []
 keyptr = -1
 
 def getIndex(text, pointer):
@@ -24,15 +22,13 @@ def getIndex(text, pointer):
 print(getIndex(plaintext, 8))
 
 while ptr < len(plaintext):
-    if keyptr < len(key)-1:
-        keyptr+=1
-    else:
-        keyptr=0
+    keyptr+=1
+    keyptr=keyptr%len(key)
+
     index = getIndex(plaintext,ptr) + getIndex(key,keyptr)
     index = index%29
     cipherletter = alphadict[index]
-    
-    ciphertext += cipherletter
+    ciphertextls.append(cipherletter)
     ptr += 1
 
-print(ciphertext)
+print("".join(ciphertextls))

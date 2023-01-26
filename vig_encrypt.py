@@ -26,8 +26,10 @@ def vig_encrypt(plaintext,key):
 
     return("".join(ciphertextls))
 
-pt="iloveuppsala"
-k = "jöhn"
+pt="letmegetthisciphertextwåthaverylöoöoooöooönglooooongkey"
+k = "jöh"
+
+kl = ["aaaaa", "bbbbb", "ccccc", "ddddd"]
 
 ct = vig_encrypt(pt, k)
 print(ct)

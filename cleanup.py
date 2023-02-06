@@ -10,4 +10,4 @@ def cleanUp(rawtext):
             cleanedtext += rawtext[index]
     return cleanedtext
 
-print(cleanUp(rawtext))
+# print(cleanUp(rawtext))

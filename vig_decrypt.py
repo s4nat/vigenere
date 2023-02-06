@@ -27,24 +27,24 @@ def vig_decrypt(plaintext,key):
     return("".join(ciphertextls))
 
 # pt="udölnfnsögrrlhygnqöddsczögjunqekimpkxmpjnx"
-pt="udåvdnnsåqhzlhwqdyödböveöghbdyekgxävxngxngwfsxnvxnupjle"
-k = "jöh"
-ct = vig_decrypt(pt, k)
-print(ct)
+# pt="udåvdnnsåqhzlhwqdyödböveöghbdyekgxävxngxngwfsxnvxnupjle"
+# k = "jöh"
+# ct = vig_decrypt(pt, k)
+# print(ct)
 
-print(len(pt))
+# print(len(pt))
 
-idx = 0
+# idx = 0
 
-klen_search = {}
-for i in range(1,17):
-    tmp = []
-    while idx < len(pt):
-        tmp.append(pt[idx:idx+i])
-        idx+=i
+# klen_search = {}
+# for i in range(1,17):
+#     tmp = []
+#     while idx < len(pt):
+#         tmp.append(pt[idx:idx+i])
+#         idx+=i
     
-    klen_search[i] = tmp
-    idx=0
+#     klen_search[i] = tmp
+#     idx=0
 
 # print(klen_search)
 
@@ -54,10 +54,10 @@ for i in range(1,17):
 #     out_dict = {}
 #     return out_dict
 
-all = "abcdefghijklmnopqrtsuvwxyzåäö"
-for j in range(1,16):
-    print(j)
-    for i in range(1,3):
-        r = all[i:i+j]
+# all = "abcdefghijklmnopqrtsuvwxyzåäö"
+# for j in range(1,16):
+#     print(j)
+#     for i in range(1,3):
+#         r = all[i:i+j]
 
-        print(vig_decrypt(pt,r))
+#         print(vig_decrypt(pt,r))

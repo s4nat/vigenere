@@ -2,6 +2,30 @@ import math
 from numpy import std, array
 from visualisers import RealFreq, keyshift, alphalist
 
+def generateArrayCheck(ciphertext, chkarr, keylen=16):
+    npArray = chkarr.copy()
+    for p in range(1,(keylen)+1):
+        for l in range(1):
+            for c in ciphertext[l::p]:
+                npArray[p-1][keyshift[c]] += 1
+        for i in range(29):
+            v = npArray[p-1][i]
+            npArray[p-1][i] = (100*(v/len(ciphertext[::p])))
+
+    return npArray
+
+def knownKeyLenArr(ciphertext, keylen=1):
+    npArray = array([[0.]*29]*keylen)
+    for p in range(1,(keylen)+1):
+        for l in range(1):
+            for c in ciphertext[p-1::keylen]:
+                npArray[p-1][keyshift[c]] += 1
+        for i in range(29):
+            v = npArray[p-1][i]
+            npArray[p-1][i] = (100*(v/len(ciphertext[::p])))
+
+    return npArray*10
+
 def findKeyLen(targetArr, verbose=True):
     ctr = 0
     rstd = math.ceil(100*std(RealFreq))
@@ -17,14 +41,15 @@ def findKeyLen(targetArr, verbose=True):
         if (diff < beststd):
             best=ctr
             beststd=diff
-        print(ctr, ": this:", thisstd, "rs :", rstd, "diff: ", diff)
+        if verbose:
+            print(ctr, ": this:", thisstd, "rs :", rstd, "diff: ", diff)
 
     print("KeyLenMostLikely", best)
     return best
 
 def crackWithKnownLen(ciphertext, keylength=1):
-    cracking = [[0.]*29]*keylength
-    crackArr = array(cracking)
+    # cracking = [[0.]*29]*keylength
+    crackArr = knownKeyLenArr(ciphertext,keylen=keylength)
 
     makeIntRf = [0]*29
     for i in range(29):
@@ -32,16 +57,10 @@ def crackWithKnownLen(ciphertext, keylength=1):
 
     idxList=[]
     for l in range(keylength):
-        for c in ciphertext[l::keylength]:
-            crackArr[l][keyshift[c]] += 1
-        for i in range(29):
-            v = crackArr[l][i]
-            crackArr[l][i] = (100*(v/len(ciphertext[::keylength])))
-
         moving = []
         for i in crackArr[l]:
             moving.append(math.ceil(i))
-
+        
         likelyAns = 0
         bestPoints = 0
         # for idx in range(KEYLEN):
@@ -49,16 +68,17 @@ def crackWithKnownLen(ciphertext, keylength=1):
             pts = 0
             for j in range(len(makeIntRf)):
                 f = makeIntRf[j]
-                if f>moving[j]:
-                    diff=f-moving[j]
+                cmpr = moving[j]
+                if f < 1 and cmpr < 1:
+                    pts += 5
                 else:
-                    diff=moving[j]-f
-                print(diff, end=" ")
-                if diff <= 5:
-                    pts+=6-diff
-                if diff > 5:
-                    pts-=2*(diff-5)
-            print(i, pts,end=" @@ \n")
+                    if f > cmpr:
+                        diff = f-cmpr
+                        pts+=f*cmpr*cmpr
+                    else:
+                        diff = cmpr-f
+                        pts+=f*cmpr*f
+                
             if pts > bestPoints:
                 likelyAns = i
                 bestPoints=pts
@@ -70,4 +90,11 @@ def crackWithKnownLen(ciphertext, keylength=1):
     key = ("".join(idxList))
     print(key)
 
-    return key, crackArr
+    return key
+
+def brute(ciphertext):
+    guesses = []
+    for i in range(1,17):
+        guess = crackWithKnownLen(ciphertext, keylength=i)
+        guesses.append(guess)
+    return guesses

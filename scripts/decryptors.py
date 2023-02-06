@@ -56,6 +56,7 @@ def crackWithKnownLen(ciphertext, keylength=1, verbose=False):
         makeIntRf[i] = math.ceil(RealFreq[i])
 
     idxList=[]
+    totalBest = 0
     for l in range(keylength):
         moving = []
         for i in crackArr[l]:
@@ -73,10 +74,8 @@ def crackWithKnownLen(ciphertext, keylength=1, verbose=False):
                     pts += 5
                 else:
                     if f > cmpr:
-                        diff = f-cmpr
                         pts+=f*cmpr*cmpr
                     else:
-                        diff = cmpr-f
                         pts+=f*cmpr*f
                 
             if pts > bestPoints:
@@ -84,18 +83,34 @@ def crackWithKnownLen(ciphertext, keylength=1, verbose=False):
                 bestPoints=pts
             save = moving.pop(0)
             moving.append(save)
+        
 
         idxList.append(alphalist[likelyAns])
+        totalBest+=bestPoints
     
     key = ("".join(idxList))
     if verbose:
         print(key)
 
-    return key
+    return key, totalBest/keylength
 
-def brute(ciphertext):
+def brute(ciphertext, verbose=False):
     guesses = []
+    scores=[]
+    bestScore = 0
+    idx = 0
     for i in range(1,17):
-        guess = crackWithKnownLen(ciphertext, keylength=i)
+        guess, score = crackWithKnownLen(ciphertext, keylength=i)
         guesses.append(guess)
-    return guesses
+        score = math.ceil(score)
+        scores.append(score)
+        if score > bestScore and i > 1:
+            idx = i-1
+            bestScore=score
+    
+    if verbose:
+        print(bestScore, "\n", scores)
+
+    return guesses, idx
+
+# DO NOT DELETE!

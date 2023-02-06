@@ -20,17 +20,17 @@ from vig_decrypt import vig_decrypt
 
 # print(vig_decrypt(encrypted_text,key))
 
-def plainToCipher(text, key, verbose=True):
+def plainToCipher(text, pkey, verbose=True):
     clean_text = cleanUp(text)
-    encrypted_text = vig_encrypt(clean_text,key)
+    encrypted_text = vig_encrypt(clean_text,pkey)
     if verbose:
-        print("Encrypted using Key:", key)
+        print("Encrypted using Key:", pkey)
         print(encrypted_text)
     return encrypted_text
 
-def cipherToPlainWithKey(encryptedTxt, key, verbose=True):
-    plaintext = vig_decrypt(encryptedTxt, key)
+def cipherToPlainWithKey(encryptedTxt, ekey, verbose=True):
+    plaintext = vig_decrypt(encryptedTxt, ekey)
     if verbose:
-        print("Decrypted using Key:", key)
+        print("Decrypted using Key:", ekey)
         print(plaintext)
     return plaintext

@@ -47,7 +47,7 @@ def findKeyLen(targetArr, verbose=True):
     print("KeyLenMostLikely", best)
     return best
 
-def crackWithKnownLen(ciphertext, keylength=1):
+def crackWithKnownLen(ciphertext, keylength=1, verbose=False):
     # cracking = [[0.]*29]*keylength
     crackArr = knownKeyLenArr(ciphertext,keylen=keylength)
 
@@ -88,7 +88,8 @@ def crackWithKnownLen(ciphertext, keylength=1):
         idxList.append(alphalist[likelyAns])
     
     key = ("".join(idxList))
-    print(key)
+    if verbose:
+        print(key)
 
     return key
 

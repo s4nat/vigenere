@@ -11,11 +11,21 @@ def getCipherFiles(folder='*'):
 
 def readFiles(files):
     output = []
+    filenames = []
     for i in files:
+        filenames.append(i.stem)
         file = open(i,"r+")
         output.append(file.read())
         file.close()
-    return output
+    return output, filenames
+
+def touchFile(filename, answer):
+    try:
+        my_file = open(filename, 'w+')
+    except IOError:
+        my_file = open(filename, 'w+')
+    my_file.write(answer)
+    my_file.close()
 
 def setup():
     alphalist = "abcdefghijklmnopqrstuvwxyzåäö"

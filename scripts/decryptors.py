@@ -1,6 +1,7 @@
 import math
 from numpy import std, array
 from visualisers import RealFreq, keyshift, alphalist
+from combine import cipherToPlainWithKey
 
 def generateArrayCheck(ciphertext, chkarr, keylen=16):
     npArray = chkarr.copy()
@@ -94,20 +95,33 @@ def crackWithKnownLen(ciphertext, keylength=1, verbose=False):
 
     return key, totalBest/keylength
 
-def brute(ciphertext, verbose=False):
+def brute(ciphertext, verbose=False, longkey=False):
     guesses = []
     scores=[]
     bestScore = 0
     idx = 0
-    for i in range(1,17):
+    checkNum = 17
+    commonFreq = ["och", "att", "fö", "en", "de", "ar", "er", "an", "tt", "et", "det", "ill","ing","var","in","te","ra","ör"]
+    if longkey:
+        checkNum = math.ceil(len(ciphertext)/2)
+    for i in range(1,checkNum):
         guess, score = crackWithKnownLen(ciphertext, keylength=i)
         guesses.append(guess)
         score = math.ceil(score)
         scores.append(score)
-        if score > bestScore and i > 1:
+        if score > bestScore and (i > 1 and i < len(ciphertext)-1):
             idx = i-1
             bestScore=score
-    
+            # if longkey:
+            satCnt =0
+            test = cipherToPlainWithKey(ciphertext, guess, verbose=False)
+            for cf in commonFreq:
+                if cf in test:
+                    satCnt+=1
+            if satCnt > math.ceil(len(commonFreq)):
+                return guesses, idx
+        satCnt=0
+
     if verbose:
         print(bestScore, "\n", scores)
 

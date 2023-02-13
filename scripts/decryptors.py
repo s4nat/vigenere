@@ -103,13 +103,13 @@ def brute(ciphertext, verbose=False, longkey=False):
     checkNum = 17
     commonFreq = ["och", "att", "fö", "en", "de", "ar", "er", "an", "tt", "et", "det", "ill","ing","var","in","te","ra","ör"]
     if longkey:
-        checkNum = math.ceil(len(ciphertext)/2)
+        checkNum = math.ceil(len(ciphertext)/25)
     for i in range(1,checkNum):
         guess, score = crackWithKnownLen(ciphertext, keylength=i)
         guesses.append(guess)
         score = math.ceil(score)
         scores.append(score)
-        if score > bestScore and (i > 1 and i < len(ciphertext)-1):
+        if score > bestScore and (i > 3 and i < len(ciphertext)-1):
             idx = i-1
             bestScore=score
             # if longkey:
@@ -125,6 +125,6 @@ def brute(ciphertext, verbose=False, longkey=False):
     if verbose:
         print(bestScore, "\n", scores)
 
-    return guesses, idx
+    return guesses, idx, scores
 
 # DO NOT DELETE!
